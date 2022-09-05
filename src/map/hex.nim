@@ -4,7 +4,7 @@ import vmath
 
 type
     Hex* = object
-        qrs*: Vec3
+        qrs*: IVec3
     HexEdge* = 0..5
     Point = Vec2
     Orientation = object
@@ -16,20 +16,20 @@ type
         size*: Vec2
         origin*: Point
 
-proc hex*(q, r: float): Hex =
-    return Hex(qrs: vec3(q, r, -q-r))
+proc hex*(q, r: int32): Hex =
+    return Hex(qrs: ivec3(q, r, -q-r))
 
-proc hex*(q, r, s: float): Hex =
+proc hex*(q, r, s: int32): Hex =
     doAssert(q + r + s == 0, "Cube coordinates must sum up to 0")
-    return Hex(qrs: vec3(q, r, s))
+    return Hex(qrs: ivec3(q, r, s))
 
-proc q*(h: Hex): float =
+proc q*(h: Hex): int =
     return h.qrs[0]
 
-proc r*(h: Hex): float =
+proc r*(h: Hex): int =
      return h.qrs[1]
 
-proc s*(h: Hex): float =
+proc s*(h: Hex): int =
      return h.qrs[2]
 
 proc `==`* (a, b: Hex): bool =
@@ -80,8 +80,8 @@ let orientation* = (
 proc hex_to_pixel*(self: Hex, layout: Layout): Vec2 =
     let m = layout.orientation
     return vec2(
-        (m.f0 * self.q + m.f1 * self.r) * layout.size.x + layout.origin.x,
-        (m.f2 * self.q + m.f3 * self.r) * layout.size.y + layout.origin.y
+        (m.f0 * self.q.float + m.f1 * self.r.float) * layout.size.x + layout.origin.x,
+        (m.f2 * self.q.float + m.f3 * self.r.float) * layout.size.y + layout.origin.y
     )
 
 proc pixel_to_hex*(layout: Layout, point: Vec2): Hex =
@@ -103,7 +103,7 @@ proc pixel_to_hex*(layout: Layout, point: Vec2): Hex =
             r = -q - s;
         else:
             s = -q - r;
-        return hex(q, r, s);
+        return hex(q.int32, r.int32, s.int32);
 
     return hex_round(q, r, -q - r);
 

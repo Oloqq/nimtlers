@@ -1,5 +1,5 @@
 import boxy, opengl, windy
-import map/drawing
+import map/hexmap
 
 let windowSize = ivec2(1280, 800)
 
@@ -9,13 +9,12 @@ makeContextCurrent(window)
 loadExtensions()
 
 let bxy = newBoxy()
+var map = newHexmap(ivec2(3, 2))
 
 # Load the images.
 # bxy.addImage("bg", readImage("data/img/cat.jpg"))
 
 var frame: int
-draw_hexes(bxy)
-
 
 # Called when it is time to draw a new frame.
 proc display() =
@@ -24,7 +23,8 @@ proc display() =
 
   # bxy.drawImage("bg", rect = rect(vec2(0, 0), windowSize.vec2))
 
-  bxy.drawImage(HEXES_DEBUG, pos = vec2(0, 0))
+  map.draw()
+  # bxy.drawImage(HEXES_DEBUG, pos = vec2(0, 0))
 
   # End this frame, flushing the draw commands.
   bxy.endFrame()
