@@ -1,8 +1,6 @@
-# implementation of https://www.redblobgames.com/grids/hexagons/implementation.html
+# implementation adapted from https://www.redblobgames.com/grids/hexagons/implementation.html
 
-import boxy, windy
-
-const HEXES_DEBUG* = "hexes_debug"
+import vmath
 
 type
     Hex* = object
@@ -14,9 +12,9 @@ type
         b0, b1, b2, b3: float
         start_angle: float
     Layout* = object
-        orientation: Orientation
-        size: Vec2
-        origin: Point
+        orientation*: Orientation
+        size*: Vec2
+        origin*: Point
 
 proc hex*(q, r: float): Hex =
     return Hex(qrs: vec3(q, r, -q-r))
@@ -79,11 +77,11 @@ let orientation* = (
         0.0)
     )
 
-proc hex_to_pixel*(layout: Layout, h: Hex): Vec2 =
+proc hex_to_pixel*(self: Hex, layout: Layout): Vec2 =
     let m = layout.orientation
     return vec2(
-        (m.f0 * h.q + m.f1 * h.r) * layout.size.x + layout.origin.x,
-        (m.f2 * h.q + m.f3 * h.r) * layout.size.y + layout.origin.y
+        (m.f0 * self.q + m.f1 * self.r) * layout.size.x + layout.origin.x,
+        (m.f2 * self.q + m.f3 * self.r) * layout.size.y + layout.origin.y
     )
 
 proc pixel_to_hex*(layout: Layout, point: Vec2): Hex =
@@ -114,40 +112,8 @@ proc hex_corner_offset(layout: Layout, corner: HexEdge): Vec2 =
     let angle = (2 * PI * (layout.orientation.start_angle + float(corner)) / 6)
     return vec2(size.x * cos(angle), size.y * sin(angle))
 
-proc polygon_corners(layout: Layout, h: Hex): array[6, Vec2] =
-    let center = hex_to_pixel(layout, h)
+proc polygon_corners*(self: Hex, layout: Layout, ): array[6, Vec2] =
+    let center = self.hex_to_pixel(layout)
     for i in 0..5:
         result[i] = center + hex_corner_offset(layout, i)
-
-proc draw_hex(ctx: Context, layout: Layout, h: Hex): void =
-    let corners = polygon_corners(layout, h)
-    echo corners
-
-    ctx.strokeStyle = "#FF0000"
-    ctx.strokeSegment(segment(corners[0], corners[1]))
-    ctx.strokeStyle = "#FFFF00"
-    ctx.strokeSegment(segment(corners[1], corners[2]))
-    ctx.strokeStyle = "#FFFFFF"
-    ctx.strokeSegment(segment(corners[2], corners[3]))
-    ctx.strokeStyle = "#00FF00"
-    ctx.strokeSegment(segment(corners[3], corners[4]))
-    ctx.strokeStyle = "#00FFFF"
-    ctx.strokeSegment(segment(corners[4], corners[5]))
-    ctx.strokeStyle = "#FF00FF"
-    ctx.strokeSegment(segment(corners[5], corners[0]))
-
-proc draw_hexes*(bxy: Boxy) =
-    var image: Image = newImage(600, 600)
-    let ctx = newContext(image)
-    ctx.fillStyle = rgba(0, 255, 0, 255)
-    ctx.strokeStyle = "#EEDD00"
-    ctx.lineWidth = 5
-
-    let layout = Layout(orientation: orientation.flat, size: vec2(50, 50), origin: vec2(100, 100))
-    let h = hex(0, 0, 0)
-    let pos = hex_to_pixel(layout, h)
-    ctx.fillCircle(circle(pos, float32(5)))
-    draw_hex(ctx, layout, h)
-
-    bxy.addImage(HEXES_DEBUG, image)
 
