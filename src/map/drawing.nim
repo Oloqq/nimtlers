@@ -31,19 +31,25 @@ proc draw_partial(self: Hex, layout: Layout, ctx: Context) =
 proc draw_hexes*(bxy: Boxy) =
     var image: Image = newImage(600, 600)
     let ctx = newContext(image)
-    ctx.fillStyle = rgba(0, 255, 0, 255)
-    ctx.strokeStyle = "#EE00FF"
+    ctx.fillStyle = "#EE00FF"
     ctx.fillCircle(circle(vec2(0, 0), float32(5)))
+    ctx.fillStyle = rgba(0, 255, 0, 255)
     ctx.strokeStyle = "#EEDD00"
     ctx.lineWidth = 5
+    ctx.font = "data/font/RobotoMono-Bold.ttf"
 
     let layout = Layout(orientation: orientation.pointy, size: vec2(50, 50), origin: vec2(100, 100))
     var hs: seq[Hex]
+    var txt: seq[string]
     hs.add hex(0, 0)
+    txt.add("text1")
     hs.add hex(1, 0)
+    txt.add("text2")
+
     for h in hs:
         let pos = h.hex_to_pixel(layout)
         ctx.fillCircle(circle(pos, float32(5)))
-        h.draw_partial(layout, ctx)
+        ctx.fillText("bruh", pos)
+        h.draw_full(layout, ctx)
 
     bxy.addImage(HEXES_DEBUG, image)

@@ -1,5 +1,5 @@
 import boxy, opengl, windy
-import hexes/drawing
+import map/drawing
 
 let windowSize = ivec2(1280, 800)
 
