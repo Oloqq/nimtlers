@@ -9,7 +9,7 @@ makeContextCurrent(window)
 loadExtensions()
 
 let bxy = newBoxy()
-var map = newHexmap(ivec2(3, 2))
+var map = newHexmap(ivec2(4, 5))
 map.render(bxy)
 
 # Load the images.

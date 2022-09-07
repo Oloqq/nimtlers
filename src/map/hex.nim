@@ -1,6 +1,7 @@
 # implementation adapted from https://www.redblobgames.com/grids/hexagons/implementation.html
 
 import vmath
+import std/bitops
 
 type
     Hex* = object
@@ -117,3 +118,15 @@ proc polygon_corners*(self: Hex, layout: Layout, ): array[6, Vec2] =
     for i in 0..5:
         result[i] = center + hex_corner_offset(layout, i)
 
+proc to_offset_pointy_odd*(self: Hex): IVec2 =
+    var col = int32(self.q + (self.r - bitand(self.r, 1)) div 2)
+    var row = int32(self.r)
+    return ivec2(col, row)
+
+proc offset_to_qrs_pointy_odd*(x, y: int): Hex =
+    var q = int32(x - (y - bitand(y, 1)) div 2)
+    var r = int32(y)
+    return hex(q, r, -q - r)
+
+proc offset_to_qrs_pointy_odd*(xy: IVec2): Hex =
+    return offset_to_qrs_pointy_odd(xy[0], xy[1])

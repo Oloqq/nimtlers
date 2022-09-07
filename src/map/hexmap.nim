@@ -10,16 +10,18 @@ type Hexmap* = ref object
     size: Vec2
     tiles: seq[seq[Hex]]
     content: seq[seq[Content]]
+    to_hex: proc(x, y: int): Hex
 
 proc newHexmap*(size: IVec2): Hexmap =
     result = new Hexmap
+    result.to_hex = offset_to_qrs_pointy_odd
+
     for x in 0 ..< size.x:
         result.tiles.add(@[])
         result.content.add(@[])
         for y in 0 ..< size.y:
-            result.tiles[x].add(hex(x, y))
+            result.tiles[x].add(result.to_hex(x, y))
             result.content[x].add(Content(txt: &"{x}|{y}"))
-            echo x, " ", y
 
     return result
 
