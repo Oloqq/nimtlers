@@ -3,7 +3,7 @@ import boxy, windy
 
 const HEXES_DEBUG* = "hexes_debug"
 
-proc draw_full(self: Hex, layout: Layout, ctx: Context) =
+proc draw_full*(self: Hex, layout: Layout, ctx: Context) =
     let corners = self.polygon_corners(layout)
 
     ctx.strokeStyle = "#FF0000"
@@ -16,7 +16,7 @@ proc draw_full(self: Hex, layout: Layout, ctx: Context) =
     ctx.strokeSegment(segment(corners[2], corners[3]))
     ctx.strokeSegment(segment(corners[5], corners[0]))
 
-proc draw_partial(self: Hex, layout: Layout, ctx: Context) =
+proc draw_partial*(self: Hex, layout: Layout, ctx: Context) =
     let corners = self.polygon_corners(layout)
     ctx.strokeStyle = "#FF0000"
     # ctx.strokeSegment(segment(corners[0], corners[1]))

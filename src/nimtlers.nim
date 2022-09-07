@@ -10,6 +10,7 @@ loadExtensions()
 
 let bxy = newBoxy()
 var map = newHexmap(ivec2(3, 2))
+map.render(bxy)
 
 # Load the images.
 # bxy.addImage("bg", readImage("data/img/cat.jpg"))
@@ -23,7 +24,7 @@ proc display() =
 
   # bxy.drawImage("bg", rect = rect(vec2(0, 0), windowSize.vec2))
 
-  map.draw()
+  map.draw(bxy)
   # bxy.drawImage(HEXES_DEBUG, pos = vec2(0, 0))
 
   # End this frame, flushing the draw commands.
