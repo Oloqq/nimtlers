@@ -1,5 +1,8 @@
 *.exe
 *nim.c
 *nim.c.o
-testresults
 nimcache
+testresults
+outputExpected.txt
+outputGotten.txt
+tests/megatest.nim

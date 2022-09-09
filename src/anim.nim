@@ -10,13 +10,13 @@ let bxy = newBoxy()
 var an = sampleAnime(bxy, window)
 
 proc draw() =
-    bxy.beginFrame(windowSize)
+  bxy.beginFrame(windowSize)
 
-    bxy.draw(an)
+  bxy.draw(an)
 
-    bxy.endFrame()
-    window.swapBuffers()
+  bxy.endFrame()
+  window.swapBuffers()
 
 while not window.closeRequested:
-    draw()
-    pollEvents()
+  draw()
+  pollEvents()
