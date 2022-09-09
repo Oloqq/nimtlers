@@ -3,15 +3,39 @@
 import vmath
 import std/bitops
 
+type Orientation = object
+    f0, f1, f2, f3: float
+    b0, b1, b2, b3: float
+    start_angle: float
+
+let orientation* = (
+    pointy: Orientation(
+        f0: sqrt(3.0),
+        f1: sqrt(3.0) / 2.0,
+        f2: 0.0,
+        f3: 3.0 / 2.0,
+        b0: sqrt(3.0) / 3.0,
+        b1: -1.0 / 3.0,
+        b2: 0.0,
+        b3: 2.0 / 3.0,
+        start_angle: 0.5),
+    flat: Orientation(
+        f0: 3.0 / 2.0,
+        f1: 0.0,
+        f2: sqrt(3.0) / 2.0,
+        f3: sqrt(3.0),
+        b0: 2.0 / 3.0,
+        b1: 0.0,
+        b2: -1.0 / 3.0,
+        b3: sqrt(3.0) / 3.0,
+        start_angle: 0.0)
+)
+
 type
     Hex* = object
         qrs*: IVec3
     HexEdge* = 0..5
     Point = Vec2
-    Orientation = object
-        f0, f1, f2, f3: float
-        b0, b1, b2, b3: float
-        start_angle: float
     Layout* = object
         orientation*: Orientation
         size*: Vec2
@@ -58,26 +82,6 @@ proc hex_direction*(direction: HexEdge): Hex =
 proc hex_neighbor*(h: Hex, direction: HexEdge): Hex =
     return h + hex_direction(direction)
 
-proc newOrientation(f0, f1, f2, f3, b0, b1, b2, b3, start_angle: float): Orientation =
-    result.f0 = f0
-    result.f1 = f1
-    result.f2 = f2
-    result.f3 = f3
-    result.b0 = b0
-    result.b1 = b1
-    result.b2 = b2
-    result.b3 = b3
-    result.start_angle = start_angle
-
-let orientation* = (
-    pointy: newOrientation(sqrt(3.0), sqrt(3.0) / 2.0, 0.0, 3.0 / 2.0,
-        sqrt(3.0) / 3.0, -1.0 / 3.0, 0.0, 2.0 / 3.0,
-        0.5),
-    flat: newOrientation(3.0 / 2.0, 0.0, sqrt(3.0) / 2.0, sqrt(3.0),
-        2.0 / 3.0, 0.0, -1.0 / 3.0, sqrt(3.0) / 3.0,
-        0.0)
-    )
-
 proc hex_to_pixel*(self: Hex, layout: Layout): Vec2 =
     let m = layout.orientation
     return vec2(
@@ -116,7 +120,7 @@ proc hex_corner_offset(layout: Layout, corner: HexEdge): Vec2 =
     let angle = (2 * PI * (layout.orientation.start_angle + float(corner)) / 6)
     return vec2(size.x * cos(angle), size.y * sin(angle))
 
-proc polygon_corners*(self: Hex, layout: Layout, ): array[6, Vec2] =
+proc polygon_corners*(self: Hex, layout: Layout): array[6, Vec2] =
     let center = self.hex_to_pixel(layout)
     for i in 0..5:
         result[i] = center + hex_corner_offset(layout, i)
