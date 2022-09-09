@@ -11,17 +11,22 @@ var map = newHexmap(ivec2(4, 5))
 map.render(bxy)
 
 proc draw() =
-  bxy.beginFrame(windowSize)
+    bxy.beginFrame(windowSize)
 
-  map.draw(bxy)
+    map.draw(bxy)
 
-  bxy.endFrame()
-  window.swapBuffers()
+    bxy.endFrame()
+    window.swapBuffers()
+
+window.onButtonPress = proc(button: Button) =
+    if button == MouseLeft:
+        echo map.screen_to_hex(window.mousePos())
+
 
 proc main() =
-  while not window.closeRequested:
-    draw()
-    pollEvents()
+    while not window.closeRequested:
+        draw()
+        pollEvents()
 
 when isMainModule:
-  main()
+    main()

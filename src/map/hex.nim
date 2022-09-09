@@ -108,6 +108,9 @@ proc pixel_to_hex*(layout: Layout, point: Vec2): Hex =
 
     return hex_round(q, r, -q - r);
 
+proc pixel_to_hex*(layout: Layout, point: IVec2): Hex =
+    return pixel_to_hex(layout, vec2(point))
+
 proc hex_corner_offset(layout: Layout, corner: HexEdge): Vec2 =
     let size = layout.size
     let angle = (2 * PI * (layout.orientation.start_angle + float(corner)) / 6)
