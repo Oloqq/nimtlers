@@ -10,7 +10,7 @@ type
     bounds*: IVec2
     fps*: int
   Animations* = object
-    current: string
+    current*: string
     frameSequences: Table[string, Animation]
 
 proc newAnimation*(b: IVec2, fps: int): Animation =
@@ -22,6 +22,9 @@ proc newAnimations*(framesSequences: Table[string, Animation],
   if starting notin framesSequences:
     raise newException(KeyError, &"Initial animation not found in the animation table: {starting}")
   result.current = starting
+
+proc switch*(self: var Animations, key: string) =
+  self.current = key
 
 proc low*(self: Animations): int =
   return self.frameSequences[self.current].bounds[0]
@@ -134,7 +137,6 @@ macro animations*(description: untyped): Animations =
       newLit(def[])
     )
   )
-  echo def[]
 
 # dumpTree:
 #   idle 0-20 20 default

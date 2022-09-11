@@ -12,13 +12,17 @@ type
     frame: int
     animations: Animations
 
+proc switch*(self: Anime, key: string) =
+  self.animations.switch(key)
+  self.frame = self.animations.low
+  self.tillNextFrame = self.animations.frameTime
+
 proc newAnime*(boxy: Boxy, sheet: Image, frameSize: IVec2, animations: Animations, uniqKey: string): Anime =
   result = new Anime
   result.boxy = boxy
   result.code = uniqKey
-  result.frame = animations.low
   result.animations = animations
-  result.tillNextFrame = animations.frameTime
+  result.switch(animations.current)
 
   var
     x = 0
@@ -51,11 +55,9 @@ proc update*(self: Anime, dt: float) =
 
 proc draw*(bxy: Boxy, anim: Anime) =
   drawImage(bxy, anim.code & $anim.frame, pos=vec2(0, 0))
-  anim.nextFrame()
-
 
 proc sampleAnime*(bxy: Boxy, window: Window): Anime =
   let animts =  animations:
-    idle  0-20   20 default
+    idle  0-20   2 default
     death 90-100 10
   return newAnime(bxy, "data/img/anime.png", ivec2(32, 32), animts)
