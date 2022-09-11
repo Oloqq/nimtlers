@@ -1,33 +1,27 @@
+import animations
 import boxy, windy
 import std/tables, strformat
 
+export animations
+
 type
-  Animations* = object
-    current: IVec2
-    frameSequences: Table[string, IVec2]
   Anime = ref object
     boxy: Boxy
     frame: int
     code: string
     animations: Animations
 
-proc newAnimations*(framesSequences: Table[string, IVec2], starting: string): Animations =
-  result.frameSequences = framesSequences
-  if starting notin framesSequences:
-    raise newException(KeyError, &"Initial animation not found in the animation table: {starting}")
-  result.current = framesSequences[starting]
-
 proc newAnime*(boxy: Boxy, sheet: Image, frameSize: IVec2, animations: Animations, uniqKey: string): Anime =
   result = new Anime
   result.boxy = boxy
   result.code = uniqKey
   result.animations = animations
+  result.frame = animations.low
 
   var
     x = 0
     y = 0
     i = 0
-
   while y < sheet.height:
     while x < sheet.width:
       boxy.addImage(result.code & $i, subImage(sheet, x, y, frameSize.x, frameSize.y))
@@ -42,11 +36,17 @@ proc newAnime*(boxy: Boxy, source: string, frameSize: IVec2, animations: Animati
 proc newAnime*(boxy: Boxy, source: string, frameSize: IVec2, animations: Animations): Anime =
   return newAnime(boxy, readImage(source), frameSize, animations, source)
 
+proc nextFrame(self: Anime) =
+  inc self.frame
+  if self.frame > self.animations.high:
+    self.frame = self.animations.low
+
+proc update(self: Anime, dt: float) =
+  discard
+
 proc draw*(bxy: Boxy, anim: Anime) =
   drawImage(bxy, anim.code & $anim.frame, pos=vec2(0, 0))
-  inc anim.frame
-  if anim.frame >= anim.animations.current[1]:
-    anim.frame = anim.animations.current[0]
+  anim.nextFrame()
 
 
 proc sampleAnime*(bxy: Boxy, window: Window): Anime =

@@ -1,6 +1,6 @@
-include ../../src/animation/anime
+include ../../src/animation/animations
 
-let fine = newAnimations({
+discard newAnimations({
   "idle": ivec2(0, 20),
   "death": ivec2(90, 100) }.toTable,
 "death")
