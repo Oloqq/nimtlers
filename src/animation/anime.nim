@@ -1,22 +1,23 @@
 import animations
 import boxy, windy
-import std/tables, strformat
+import std/tables
 
 export animations
 
 type
   Anime = ref object
     boxy: Boxy
-    frame: int
     code: string
+    fps: int
+    frame: int
     animations: Animations
 
 proc newAnime*(boxy: Boxy, sheet: Image, frameSize: IVec2, animations: Animations, uniqKey: string): Anime =
   result = new Anime
   result.boxy = boxy
   result.code = uniqKey
-  result.animations = animations
   result.frame = animations.low
+  result.animations = animations
 
   var
     x = 0
@@ -50,5 +51,8 @@ proc draw*(bxy: Boxy, anim: Anime) =
 
 
 proc sampleAnime*(bxy: Boxy, window: Window): Anime =
-  let animations = newAnimations({ "idle": ivec2(0, 20), "death": ivec2(90, 100) }.toTable, "death")
-  return newAnime(bxy, "data/img/anime.png", ivec2(32, 32), animations)
+  let animts = newAnimations({
+    "idle": Animation(bounds: ivec2(0, 20), fps: 20),
+    "death": Animation(bounds: ivec2(90, 100), fps: 20) }.toTable,
+    "death")
+  return newAnime(bxy, "data/img/anime.png", ivec2(32, 32), animts)
