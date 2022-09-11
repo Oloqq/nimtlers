@@ -9,7 +9,8 @@ const
 
 let
   frameSize = ivec2(32, 32)
-  animts = newAnimations({"idle": ivec2(0, 10)}.toTable, "idle")
+  animts = animations:
+    idle 0-10 10
 
 discard newAnime(bx, sheetPath, frameSize, animts, SAME_KEY)
 

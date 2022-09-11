@@ -7,7 +7,8 @@ const
 
 let
   frameSize = ivec2(32, 32)
-  animts = newAnimations({"idle": ivec2(5, 10)}.toTable, "idle")
+  animts = animations:
+    idle 5-10 10
   anime = newAnime(bx, sheetPath, frameSize, animts, "nextFrame")
 
 assert anime.frame == 5, $anime.frame

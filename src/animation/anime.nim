@@ -42,8 +42,8 @@ proc nextFrame(self: Anime) =
   if self.frame > self.animations.high:
     self.frame = self.animations.low
 
-proc update(self: Anime, dt: float) =
-  discard
+proc update*(self: Anime, dt: float) =
+  echo dt
 
 proc draw*(bxy: Boxy, anim: Anime) =
   drawImage(bxy, anim.code & $anim.frame, pos=vec2(0, 0))
@@ -51,8 +51,7 @@ proc draw*(bxy: Boxy, anim: Anime) =
 
 
 proc sampleAnime*(bxy: Boxy, window: Window): Anime =
-  let animts = newAnimations({
-    "idle": Animation(bounds: ivec2(0, 20), fps: 20),
-    "death": Animation(bounds: ivec2(90, 100), fps: 20) }.toTable,
-    "death")
+  let animts =  animations:
+    idle  0-20   20 default
+    death 90-100 10
   return newAnime(bxy, "data/img/anime.png", ivec2(32, 32), animts)
