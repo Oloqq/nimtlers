@@ -29,6 +29,12 @@ proc low*(self: Animations): int =
 proc high*(self: Animations): int =
   return self.frameSequences[self.current].bounds[1]
 
+proc fps*(self: Animations): int =
+  return self.frameSequences[self.current].fps
+
+proc frameTime*(self: Animations): float =
+  return 1 / self.frameSequences[self.current].fps.float
+
 proc animationTableEntry(key: string, l, h, fps: int): NimNode =
   result = nnkExprColonExpr.newTree(
     newLit(key),

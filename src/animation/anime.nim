@@ -8,7 +8,7 @@ type
   Anime = ref object
     boxy: Boxy
     code: string
-    fps: int
+    tillNextFrame: float
     frame: int
     animations: Animations
 
@@ -18,6 +18,7 @@ proc newAnime*(boxy: Boxy, sheet: Image, frameSize: IVec2, animations: Animation
   result.code = uniqKey
   result.frame = animations.low
   result.animations = animations
+  result.tillNextFrame = animations.frameTime
 
   var
     x = 0
@@ -43,7 +44,10 @@ proc nextFrame(self: Anime) =
     self.frame = self.animations.low
 
 proc update*(self: Anime, dt: float) =
-  echo dt
+  self.tillNextFrame -= dt
+  if self.tillNextFrame <= 0:
+    self.nextFrame()
+    self.tillNextFrame += self.animations.frameTime
 
 proc draw*(bxy: Boxy, anim: Anime) =
   drawImage(bxy, anim.code & $anim.frame, pos=vec2(0, 0))
