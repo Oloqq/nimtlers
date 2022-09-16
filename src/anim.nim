@@ -1,5 +1,7 @@
 import boxy, opengl, windy
 import animation/anime
+import animation/entities
+import animation/movement
 import std/[times, os]
 
 let windowSize = ivec2(1280, 800)
@@ -8,21 +10,26 @@ makeContextCurrent(window)
 loadExtensions()
 
 let bxy = newBoxy()
-var an = sampleAnime(bxy, window)
+var entity = Entity(anime: sampleAnime(bxy, window))
 
 var time = cpuTime()
+
+
+# relocate()
+entity.relocate(vec2(100, 100))
+# entity.relocate(vec2(100, 100))
 
 proc update() =
   let
     current = cpuTime()
     dt = current - time
   time = current
-  an.update(dt)
+  entity.update(dt)
 
 proc draw() =
   bxy.beginFrame(windowSize)
 
-  bxy.draw(an)
+  bxy.draw(entity)
 
   bxy.endFrame()
   window.swapBuffers()

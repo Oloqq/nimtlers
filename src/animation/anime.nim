@@ -5,7 +5,7 @@ import std/tables
 export animations
 
 type
-  Anime = ref object
+  Anime* = ref object
     boxy: Boxy
     code: string
     tillNextFrame: float
@@ -17,7 +17,13 @@ proc switch*(self: Anime, key: string) =
   self.frame = self.animations.low
   self.tillNextFrame = self.animations.frameTime
 
-proc newAnime*(boxy: Boxy, sheet: Image, frameSize: IVec2, animations: Animations, uniqKey: string): Anime =
+proc newAnime*(
+    boxy: Boxy,
+    sheet: Image,
+    frameSize: IVec2,
+    animations: Animations,
+    uniqKey: string
+    ): Anime =
   result = new Anime
   result.boxy = boxy
   result.code = uniqKey
@@ -36,10 +42,21 @@ proc newAnime*(boxy: Boxy, sheet: Image, frameSize: IVec2, animations: Animation
     x = 0
     y += frameSize.y
 
-proc newAnime*(boxy: Boxy, source: string, frameSize: IVec2, animations: Animations, uniqKey: string): Anime =
+proc newAnime*(
+    boxy: Boxy,
+    source: string,
+    frameSize: IVec2,
+    animations: Animations,
+    uniqKey: string
+    ): Anime =
   return newAnime(boxy, readImage(source), frameSize, animations, uniqKey)
 
-proc newAnime*(boxy: Boxy, source: string, frameSize: IVec2, animations: Animations): Anime =
+proc newAnime*(
+    boxy: Boxy,
+    source: string,
+    frameSize: IVec2,
+    animations: Animations
+    ): Anime =
   return newAnime(boxy, readImage(source), frameSize, animations, source)
 
 proc nextFrame(self: Anime) =
@@ -53,8 +70,8 @@ proc update*(self: Anime, dt: float) =
     self.nextFrame()
     self.tillNextFrame += self.animations.frameTime
 
-proc draw*(bxy: Boxy, anim: Anime) =
-  drawImage(bxy, anim.code & $anim.frame, pos=vec2(0, 0))
+proc draw*(bxy: Boxy, anim: Anime, pos: Vec2) =
+  drawImage(bxy, anim.code & $anim.frame, pos=pos)
 
 proc sampleAnime*(bxy: Boxy, window: Window): Anime =
   let animts =  animations:

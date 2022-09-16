@@ -12,3 +12,4 @@ let a = newAnime(bx, sheet_path, frameSize, animts)
 assert a.code == sheet_path
 let b = newAnime(bx, sheet_path, frameSize, animts, "key")
 assert b.code == "key"
+assert false
