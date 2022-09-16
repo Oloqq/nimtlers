@@ -4,11 +4,13 @@ import movement
 
 type
   Entity* = ref object of RootObj
+    # implements movement/Movable
     anime*   : Anime
     pos*      : Vec2
     movement* : Movement
 
-method update*(self: Entity, dt: float) {.base.} =
+method update*(self: var Entity, dt: float) {.base.} =
+  self.step(dt)
   self.anime.update(dt)
 
 method draw*(bx: Boxy, entity: Entity) {.base.} =

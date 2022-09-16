@@ -14,10 +14,8 @@ var entity = Entity(anime: sampleAnime(bxy, window))
 
 var time = cpuTime()
 
-
-# relocate()
 entity.relocate(vec2(100, 100))
-# entity.relocate(vec2(100, 100))
+entity.linearMove(vec2(500, 300), 5.0)
 
 proc update() =
   let
