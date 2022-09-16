@@ -1,8 +1,6 @@
 include ../../src/animation/movement
 import ../utils
 
-raise newException(IOError, "asd")
-
 type
   TestMovable = object
     pos: Vec2
@@ -15,28 +13,47 @@ block relocate:
   m.relocate(goal)
   assert m.pos == goal
 
-block linear1:
+block no_movement_is_fine:
+  var m: TestMovable
+  m.step(1)
+
+block linear_x:
   var m: TestMovable
   let
     start = vec2(20, 100)
     goal = vec2(120, 100)
     time = 1.0
-    step = 0.25
   m.pos = start
   m.linearMove(goal, time)
   assert m.pos == start
 
-  m.step(step)
-  echo m.pos
-  assert m.pos ~= vec2(20 + 100*step, 100)
-  assert false
-assert false
+  m.step(0.25)
+  assert m.pos ~= vec2(20 + 100*0.25, 100)
 
-# let
-#   frameSize = ivec2(32, 32)
-#   animts = animations:
-#     idle 0-10 10
-# let a = newAnime(bx, sheet_path, frameSize, animts)
-# assert a.code == sheet_path
-# let b = newAnime(bx, sheet_path, frameSize, animts, "key")
-# assert b.code == "key"
+  m.step(0.75)
+  assert m.pos == goal
+
+  m.step(1)
+  assert m.pos == goal
+
+block linear:
+  var m: TestMovable
+  let
+    start = vec2(0, 0)
+    goal = vec2(200, 100)
+    time = 4.0
+  m.pos = start
+  m.linearMove(goal, time)
+  assert m.pos == start
+
+  m.step(1)
+  assert m.pos ~= vec2(50, 25)
+
+  m.step(1)
+  assert m.pos ~= vec2(100, 50)
+
+  m.step(2)
+  assert m.pos == goal
+
+  m.step(1)
+  assert m.pos == goal
